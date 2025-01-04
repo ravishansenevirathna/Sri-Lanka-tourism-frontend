@@ -1,11 +1,12 @@
-import { useState } from 'react'
-
+import {LoginPage} from "../component/loginPage/LoginPage.jsx";
 
 function App() {
 
   return (
     <div>
-      <h1>Vite + React</h1>
+
+        <LoginPage></LoginPage>
+
     </div>
   )
 }
