@@ -1,11 +1,12 @@
-import {LoginPage} from "../component/loginPage/LoginPage.jsx";
+import NavBar from "../component/navBar/NavBar.jsx";
+
 
 function App() {
 
   return (
     <div>
 
-        <LoginPage></LoginPage>
+        <NavBar></NavBar>
 
     </div>
   )
