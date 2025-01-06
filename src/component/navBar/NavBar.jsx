@@ -1,7 +1,7 @@
 import './NavBarStyle.css'
 import {Component} from "react";
 import {MenuItems} from "./MenuItems.js";
-import {Button} from "@mui/material";
+import { Link } from "react-router-dom";
 
 class NavBar extends Component{
 
@@ -18,13 +18,13 @@ class NavBar extends Component{
                 <div className="menu-icons" onClick={this.handleClick}>
                 <i className={this.state.clicked ? "fas fa-times" : "fas fa-bars"}></i> </div>
 
-                <ul className="nav-menu">
+                <ul className={this.state.clicked ? "nav-menu active" : "nav-menu"}>
                     {MenuItems.map((item, index) => {
                         return (
                             <li key={index}>
-                                <a className={item.cName} href="/">
+                                <Link className={item.cName} to={item.url}>
                                     <i className={item.icon}></i>{item.title}
-                                </a>
+                                </Link>
                             </li>
                         )
                     })}

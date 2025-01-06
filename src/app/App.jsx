@@ -1,4 +1,8 @@
-import NavBar from "../component/navBar/NavBar.jsx";
+import About from "../component/about/About.jsx";
+import Contact from "../component/contact/Contact.jsx";
+import Service from "../component/service/Service.jsx";
+import Home from "../component/home/Home.jsx";
+import { Routes, Route } from "react-router-dom";
 
 
 function App() {
@@ -6,7 +10,14 @@ function App() {
   return (
     <div>
 
-        <NavBar></NavBar>
+       <Routes>
+           <Route path='/' element={<Home />} />
+           <Route path='/about' element={<About />} />
+           <Route path='/contact' element={<Contact />} />
+           <Route path='/service' element={<Service />} />
+       </Routes>
+
+
 
     </div>
   )
