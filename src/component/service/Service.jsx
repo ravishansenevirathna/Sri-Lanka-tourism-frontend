@@ -1,5 +1,6 @@
 import NavBar from "../navBar/NavBar.jsx";
 import Hero from "../hero/Hero.jsx";
+import "../hero/HeroStyles.css"
 
 function Service(){
     return(
@@ -7,9 +8,9 @@ function Service(){
             <NavBar></NavBar>
             <Hero
                 cName = "hero-mid"
-                heroImg = "https://i.pinimg.com/originals/57/6f/13/576f13107b6629968967dd78c89d99d4.jpg"
+                heroImg = "https://images.travelandleisureasia.com/wp-content/uploads/sites/3/2023/11/20172113/mirissa-1600x900.jpg"
                 title = "Service"
-                text = "Choose Your Destination."
+                // text = "Choose Your Destination."
                 btnClass = "hide"></Hero>
 
         </>

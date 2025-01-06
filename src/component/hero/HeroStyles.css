@@ -27,6 +27,7 @@ img{
     left: 50%;
     transform: translate(-50%, -50%);
     width: 100%;
+    text-align: center;
 
 }
 
@@ -40,8 +41,9 @@ img{
 
 .hero-text p{
     font-size: 1.3rem;
-    background: white;
+    color: white;
    padding: 0.5rem 0 2rem 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.7);
 }
 
 .hero-text .show{
