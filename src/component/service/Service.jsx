@@ -8,7 +8,7 @@ function Service(){
             <NavBar></NavBar>
             <Hero
                 cName = "hero-mid"
-                heroImg = "https://images.travelandleisureasia.com/wp-content/uploads/sites/3/2023/11/20172113/mirissa-1600x900.jpg"
+                heroImg = "https://sonofthemorninglight.wordpress.com/wp-content/uploads/2019/05/img_9968.jpg"
                 title = "Service"
                 // text = "Choose Your Destination."
                 btnClass = "hide"></Hero>
