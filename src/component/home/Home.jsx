@@ -5,7 +5,14 @@ function Home(){
     return(
         <>
             <NavBar></NavBar>
-            <Hero></Hero>
+            <Hero
+            cName = "hero"
+            heroImg = "../src/assets/12.jpg"
+            title = "Your Journey Your Story"
+            text = "Choose Your Destination."
+            buttonText = "Travel Plan"
+            url = "/"
+            btnClass = "show"></Hero>
 
         </>
     )

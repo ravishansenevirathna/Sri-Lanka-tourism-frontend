@@ -1,10 +1,18 @@
 
-function Hero(){
+function Hero(props){
     return(
         <>
 
-            <div className="hero">
-                <img alt="HeroImg" src="../src/assets/12.jpg"/>
+            <div className={props.cName}>
+                <img alt="HeroImg" src={props.heroImg}/>
+
+                <div className="hero-text">
+                    <h1>{props.title}</h1>
+                    <p>{props.text}</p>
+                    <a href={props.url} className={props.btnClass}>
+                        {props.buttonText}
+                    </a>
+                </div>
             </div>
         </>
     )
