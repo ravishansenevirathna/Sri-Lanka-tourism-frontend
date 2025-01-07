@@ -2,6 +2,7 @@ import NavBar from "../navBar/NavBar.jsx";
 import Hero from "../hero/Hero.jsx";
 import "../hero/HeroStyles.css"
 import Destinations from "../destinations/Destinations.jsx";
+import Trip from "../trip/Trip.js";
 
 function Home(){
     return(
@@ -17,6 +18,7 @@ function Home(){
             btnClass = "show"></Hero>
 
             <Destinations></Destinations>
+            <Trip></Trip>
 
         </>
     )
