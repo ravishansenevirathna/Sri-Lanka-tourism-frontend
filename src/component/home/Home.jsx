@@ -15,7 +15,7 @@ function Home(){
             title = "Your Journey, Your Story!"
             text = "Choose Your Destination."
             buttonText = "Travel Plan"
-            url = "/"
+            url = "/plan"
             btnClass = "show"></Hero>
 
             <Destinations></Destinations>

@@ -1,58 +1,124 @@
 
 .background {
     background-image: url("https://www.lot.com/content/dam/lot/lot-com/destination-photos/sri-lanka/Sri%20Lanka-2.jpg");
-    /*background-size: contain; !* Ensures the full image is displayed *!*/
-    background-repeat: no-repeat; /* Prevents tiling of the image */
-    background-position: center; /* Centers the image */
+    background-repeat: no-repeat;
+    background-position: center;
     width: 100%;
-    height: 100vh; /* Takes the full viewport height */
+    height: 100vh;
     background-size: cover;
 }
+
 
 .signin-container {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-height: 100vh; /* Covers entire screen */
     padding: 2rem;
-    /*background: linear-gradient(to bottom right, #f5f7fa, #e4ebf5);*/
+    max-height: 80vh;
 }
+
 
 .signin-box {
-    margin-top: 20%;
-    background-color: #fff;
+    background: rgba(255, 255, 255, 0.25); /* Transparent white background */
+    backdrop-filter: blur(10px); /* Glassmorphism blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Border to enhance the glass effect */
+    border-radius: 15px; /* Rounded corners for a modern look */
     padding: 3rem 2rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); /* Subtle shadow for depth */
     max-width: 400px;
     width: 100%;
-}
-
-.signin-title {
-    font-size: 2rem;
-    /*font-weight: 800;*/
-    font-family: 'Poppins', sans-serif;
-    color: #333;
-    margin-bottom: 1.5rem;
     text-align: center;
+    color: #333; /* Darker text color for better readability */
+    margin-top: 15rem; /* Adjust vertical spacing */
+
 
 }
 
+/* Title Styling */
+.signin-title {
+    font-size: 3rem;
+    font-family: 'Poppins', sans-serif;
+    /*margin-bottom: 1rem;*/
+    color: white; /* Text color */
+    background: linear-gradient(90deg, #69c884, #70d661); /* Gradient effect */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Gradient text */
+    text-shadow: 2px 2px 4px rgba(0, 255, 84, 0.5); /* Shadow for depth */
+    margin-bottom: 1.5rem; /* Add spacing below the title */
+    display: flex; /* Align icon and text */
+    align-items: center;
+    justify-content: center;
+}
+
+/* Subtitle Styling */
+.signin-subtitle {
+    font-size: 1rem;
+    font-family: 'Poppins', sans-serif;
+    color: rgba(255, 255, 255, 0.8); /* Softer white for the subtitle */
+    margin-bottom: 2rem;
+}
+
+/* Input Fields */
 .signin-form .MuiTextField-root {
     margin-bottom: 1.5rem;
     font-family: 'Poppins', sans-serif;
 }
 
+/* Button Styling */
 .signin-button {
     background-color: #007bff;
     color: #fff;
-    font-weight: 700;
+    font-weight: bold;
+    padding: 0.8rem;
+    font-size: 1rem;
     text-transform: uppercase;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Subtle button shadow */
+    margin-top: 1rem;
+    border-radius: 5px; /* Rounded corners for the button */
 }
 
 .signin-button:hover {
     background-color: #0056b3;
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4); /* Enhanced hover effect */
+}
+
+/* Footer Link Styling */
+.signin-footer a {
+    color: #007bff;
+    font-weight: 500;
+    transition: color 0.3s ease;
+    text-decoration: none;
+}
+
+.signin-footer a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+/* Responsive Adjustments */
+@media screen and (max-width: 768px) {
+    .signin-box {
+        margin: 10% auto 0 auto;
+        padding: 2rem 1.5rem;
+    }
+    .signin-title {
+        font-size: 1.8rem;
+    }
+    .signin-subtitle {
+        font-size: 0.9rem;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .signin-box {
+        margin: 15% auto 0 auto;
+        padding: 1.5rem 1rem;
+    }
+    .signin-title {
+        font-size: 1.5rem;
+    }
+    .signin-subtitle {
+        font-size: 0.8rem;
+    }
 }

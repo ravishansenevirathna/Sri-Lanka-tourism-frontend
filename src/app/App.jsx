@@ -5,6 +5,7 @@ import Home from "../component/home/Home.jsx";
 import { Routes, Route } from "react-router-dom";
 import SignIn from "../component/auth/SignIn.jsx";
 import Login from "../component/auth/Login.jsx";
+import Plan from "../component/plans/Plans.jsx";
 
 
 function App() {
@@ -19,6 +20,7 @@ function App() {
            <Route path='/service' element={<Service />} />
            <Route path='/signIn' element={<SignIn />} />
            <Route path='/login' element={<Login />} />
+           <Route path='/plan' element={<Plan />} />
        </Routes>
 
 

@@ -18,20 +18,34 @@
 }
 
 .login-box {
-    background-color: #fff;
+    background: rgba(255, 255, 255, 0.25); /* Transparent white background */
+    backdrop-filter: blur(10px); /* Glassmorphism blur effect */
+    border: 1px solid rgba(255, 255, 255, 0.2); /* Border to enhance the glass effect */
+    border-radius: 15px; /* Rounded corners for a modern look */
     padding: 3rem 2rem;
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25); /* Subtle shadow for depth */
     max-width: 400px;
     width: 100%;
+    text-align: center;
+    color: #333; /* Darker text color for better readability */
+
+
+
 }
 
 .login-title {
-    font-weight: 600;
+    font-size: 3rem;
     font-family: 'Poppins', sans-serif;
-    color: #333;
-    margin-bottom: 1.5rem;
-    text-align: center;
+    /*margin-bottom: 1rem;*/
+    color: white; /* Text color */
+    background: linear-gradient(90deg, #69c884, #70d661); /* Gradient effect */
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; /* Gradient text */
+    text-shadow: 2px 2px 4px rgba(0, 255, 84, 0.5); /* Shadow for depth */
+    margin-bottom: 1.5rem; /* Add spacing below the title */
+    display: flex; /* Align icon and text */
+    align-items: center;
+    justify-content: center;
 }
 
 .login-form .MuiTextField-root {

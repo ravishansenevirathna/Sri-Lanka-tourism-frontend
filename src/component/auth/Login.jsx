@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import { TextField, Button, Container, Typography, Box } from "@mui/material";
-import { Link } from "react-router-dom"; // Import Link for navigation
 import "./LoginStyles.css"
 import NavBar from "../navBar/NavBar.jsx";
 import Footer from "../footer/Footer.jsx";
+import instance from "../../service/serviceOrder.jsx";
+import { useNavigate } from "react-router-dom";
 
 
 function LogIn() {
+
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState({
         email: "",
         password: "",
@@ -19,8 +23,21 @@ function LogIn() {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log("Login Form Data: ", formData);
-        // Add your signup logic here
+
+
+        instance.post('/login', {
+            email: formData.email,
+            password: formData.password
+        })
+            .then(function (response) {
+                localStorage.setItem('userToken',response.data.token);
+                navigate("/");
+                // window.location.reload();
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     };
 
     return (
@@ -40,6 +57,7 @@ function LogIn() {
                     <form onSubmit={handleSubmit} className="login-form">
                         <TextField
                             fullWidth
+                            size="small"
                             label="Email"
                             name="email"
                             type="email"
@@ -50,6 +68,7 @@ function LogIn() {
                         />
                         <TextField
                             fullWidth
+                            size="small"
                             label="Password"
                             name="password"
                             type="password"
@@ -71,7 +90,7 @@ function LogIn() {
                 </Box>
             </Container>
             </div>
-            <Footer /> {/* Footer at the bottom */}
+            <Footer />
         </>
     );
 }
