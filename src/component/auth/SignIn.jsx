@@ -5,6 +5,7 @@ import "./SignInStyles.css";
 import Footer from "../footer/Footer.jsx";
 import NavBar from "../navBar/NavBar.jsx";
 import instance from "../../service/serviceOrder.jsx";
+import Swal from 'sweetalert2';
 
 function SignIn() {
     const [formData, setFormData] = useState({
@@ -27,12 +28,23 @@ function SignIn() {
             password: formData.password
         })
             .then(() => {
-                alert("Successfully Signed Up!");
-                window.location.href = "/login";
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Success!',
+                    text: 'Successfully Signed Up!',
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    window.location.href = "/login";
+                });
             })
             .catch((error) => {
                 console.error(error);
-                alert("An error occurred. Please try again.");
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'An error occurred. Please try again.',
+                    confirmButtonText: 'OK'
+                });
             });
     };
 

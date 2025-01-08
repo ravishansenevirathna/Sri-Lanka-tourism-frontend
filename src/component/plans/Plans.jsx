@@ -1,13 +1,17 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./PlansStyles.css";
 import NavBar from "../navBar/NavBar.jsx";
 import Footer from "../footer/Footer.jsx";
+import instance from "../../service/serviceOrder.jsx";
+import Swal from "sweetalert2";
 
 function Plan() {
     const [selectedHotel, setSelectedHotel] = useState(null);
     const [selectedTime, setSelectedTime] = useState("");
     const [selectedLocation, setSelectedLocation] = useState(null);
     const [numTourists, setNumTourists] = useState(1);
+    const [isNavbarHidden, setIsNavbarHidden] = useState(false);
+    const [isFooterVisible, setIsFooterVisible] = useState(false);
 
     const hotels = [
         { name: "Hotel Paradise", description: "A luxurious beachside hotel.", rating: 5, price: 200 },
@@ -35,14 +39,51 @@ function Plan() {
         );
     };
 
+
+    useEffect(() => {
+
+        instance.get('/hotels/getAll', {
+
+        })
+            .then(() => {
+
+            })
+            .catch((error) => {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Oops...',
+                    text: 'An error occurred. Please try again.',
+                    confirmButtonText: 'OK'
+                });
+            });
+
+        const handleScroll = () => {
+            if (window.innerHeight + document.documentElement.scrollTop >= document.documentElement.offsetHeight) {
+                setIsNavbarHidden(true);
+                setIsFooterVisible(true);
+            } else {
+                setIsNavbarHidden(false);
+            }
+        };
+
+        window.addEventListener("scroll", handleScroll);
+        return () => {
+            window.removeEventListener("scroll", handleScroll);
+        };
+    }, []);
+
     return (
         <div>
-            <NavBar />
+
+            <div className={`navbar-container ${isNavbarHidden ? "hidden" : ""}`}>
+                <NavBar />
+            </div>
+
             <div className="background">
                 <div className="plan-container">
                     <h1 className="plan-title">Plan Your Reservation</h1>
                     <form onSubmit={handleSubmit} className="plan-form">
-                        {/* Hotel Selection */}
+
                         <div>
                             <h2>Select a Hotel:</h2>
                             <div className="tile-container">
@@ -61,7 +102,6 @@ function Plan() {
                             </div>
                         </div>
 
-                        {/* Location Selection */}
                         <div>
                             <h2>Select a Location:</h2>
                             <div className="tile-container">
@@ -79,7 +119,6 @@ function Plan() {
                             </div>
                         </div>
 
-                        {/* Time Selection */}
                         <div>
                             <h2>Select Time:</h2>
                             <div className="tile-container">
@@ -95,7 +134,6 @@ function Plan() {
                             </div>
                         </div>
 
-                        {/* Number of Tourists */}
                         <div className="form-group">
                             <label htmlFor="numTourists">Number of Tourists:</label>
                             <input
@@ -108,14 +146,14 @@ function Plan() {
                             />
                         </div>
 
-                        {/* Submit Button */}
                         <button type="submit" className="plan-submit">
                             Confirm Plan
                         </button>
                     </form>
                 </div>
             </div>
-            <Footer />
+
+            {isFooterVisible && <Footer />}
         </div>
     );
 }

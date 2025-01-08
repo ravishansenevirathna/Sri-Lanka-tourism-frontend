@@ -13,7 +13,7 @@ function Home(){
             cName = "hero"
             heroImg = "https://www.lot.com/content/dam/lot/lot-com/destination-photos/sri-lanka/Sri%20Lanka-2.jpg"
             title = "Your Journey, Your Story!"
-            text = "Choose Your Destination."
+            text = "Plan Your Escape to Paradise."
             buttonText = "Travel Plan"
             url = "/plan"
             btnClass = "show"></Hero>
