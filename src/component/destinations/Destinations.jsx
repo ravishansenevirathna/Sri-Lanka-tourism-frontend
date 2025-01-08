@@ -10,7 +10,7 @@ const Destinations = () => {
                 className="first-des"
                 heading="Colombo"
                 text="The bustling capital of Sri Lanka, Colombo is a mix of modernity and tradition. Visit the iconic Lotus Tower, explore the National Museum, and relax at Galle Face Green."
-                img1="https://images.unsplash.com/photo-1623595289196-007a22dd8560?q=80&w=1887&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                img1="https://pbs.twimg.com/media/F_jn1RObsAAzNAj.jpg:large"
                 src1="colombo.jpg"
                 img2="https://images.pexels.com/photos/12055673/pexels-photo-12055673.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1"
                 src2="colombo2.jpg"

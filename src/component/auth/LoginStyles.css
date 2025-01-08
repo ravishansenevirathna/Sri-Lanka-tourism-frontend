@@ -1,0 +1,54 @@
+.background {
+    background-image: url("https://www.lot.com/content/dam/lot/lot-com/destination-photos/sri-lanka/Sri%20Lanka-2.jpg");
+    /*background-size: contain; !* Ensures the full image is displayed *!*/
+    background-repeat: no-repeat; /* Prevents tiling of the image */
+    background-position: center; /* Centers the image */
+    width: 100%;
+    height: 100vh; /* Takes the full viewport height */
+    background-size: cover;
+}
+
+.login-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh; /* Covers entire screen */
+    padding: 2rem;
+    /*background: linear-gradient(to bottom right, #f5f7fa, #e4ebf5);*/
+}
+
+.login-box {
+    background-color: #fff;
+    padding: 3rem 2rem;
+    border-radius: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    max-width: 400px;
+    width: 100%;
+}
+
+.login-title {
+    font-weight: 600;
+    font-family: 'Poppins', sans-serif;
+    color: #333;
+    margin-bottom: 1.5rem;
+    text-align: center;
+}
+
+.login-form .MuiTextField-root {
+    margin-bottom: 1.5rem;
+    font-family: 'Poppins', sans-serif;
+}
+
+.login-button {
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 700;
+    text-transform: uppercase;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.login-button:hover {
+    background-color: #0056b3;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+}

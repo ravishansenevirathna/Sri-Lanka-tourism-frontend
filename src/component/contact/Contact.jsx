@@ -2,6 +2,7 @@ import NavBar from "../navBar/NavBar.jsx";
 import Hero from "../hero/Hero.jsx";
 import "../hero/HeroStyles.css"
 import Footer from "../footer/Footer.jsx";
+import ContactForm from "./ContactForm.jsx";
 
 function Contact(){
     return(
@@ -13,6 +14,7 @@ function Contact(){
                 title = "Contact"
                 text = "Choose Your Destination."
                 btnClass = "hide"></Hero>
+            <ContactForm></ContactForm>
             <Footer></Footer>
 
         </>
