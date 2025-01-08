@@ -1,6 +1,8 @@
 import NavBar from "../navBar/NavBar.jsx";
 import Hero from "../hero/Hero.jsx";
 import "../hero/HeroStyles.css"
+import Footer from "../footer/Footer.jsx";
+import Trip from "../trip/Trip.jsx";
 
 function Service(){
     return(
@@ -12,6 +14,8 @@ function Service(){
                 title = "Service"
                 // text = "Choose Your Destination."
                 btnClass = "hide"></Hero>
+            <Trip></Trip>
+            <Footer></Footer>
 
         </>
     )

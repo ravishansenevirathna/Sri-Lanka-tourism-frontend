@@ -1,5 +1,5 @@
 import "./TripStyles.css";
-import TripData from "./TripData.js";
+import TripData from "./TripData.jsx";
 
 function Trip() {
     return (
@@ -11,33 +11,33 @@ function Trip() {
 
             <div className="tripcard">
                 <TripData
-                    image="https://images.unsplash.com/photo-1528663761259-71e2c04387f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+                    image="https://tripjive.com/wp-content/uploads/2024/10/best-day-tour-knuckles-mountain-range-1024x585.jpg"
                     heading="Knuckles Mountain Range"
                     title="A haven for adventure seekers, the Knuckles Mountain Range offers hiking trails, diverse wildlife, and stunning mountain views."
                 />
 
                 <TripData
-                    image="https://images.unsplash.com/photo-1594979636768-1c9cdb38ab95?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+                    image="https://rainbowtourssrilanka.com/wp-content/uploads/2017/05/surf11-1024x819.jpg"
                     heading="Arugam Bay"
                     title="Famous for surfing, Arugam Bay is a paradise for water sports enthusiasts, with golden beaches and vibrant nightlife."
                 />
 
                 <TripData
-                    image="https://images.unsplash.com/photo-1572089566558-12c1f5cc0a5e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+                    image="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiQQELZ4bfY8WKGyf7Gg0EEFlrU-s0e09MuwfUGCT1MNkoJVe0O7L1zCWsX5a7bUMMgvvVxeiEfnCmL6Uh4V1PEe88_KsNhbhjLqzqgF5oxTmybkPqgejyU6Nk5cqJYXC3f54tiSr_UF01z/s1600/6301208809_94b50c343a_b.jpg"
                     heading="Polonnaruwa"
                     title="Step into the ancient kingdom of Polonnaruwa, a UNESCO World Heritage Site with ancient ruins, temples, and royal palaces."
                 />
 
                 <TripData
-                    image="https://images.unsplash.com/photo-1612165958320-9d77631cbeb5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
+                    image="https://admin.myceylonadventures.com/uploads/Snorkeling_and_Scuba_Diving_in_Trincomalee_6_fa6e0134fd.jpg"
                     heading="Trincomalee"
                     title="Known for its pristine beaches, Koneswaram Temple, and whale-watching opportunities, Trincomalee is a perfect mix of history and beauty."
                 />
 
                 <TripData
-                    image="https://images.unsplash.com/photo-1599707215750-8dcb23c64be2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1350&q=80"
-                    heading="Udawalawe National Park"
-                    title="Experience a safari adventure at Udawalawe National Park, home to herds of elephants, leopards, and exotic birds."
+                    image="https://www.hotelia.lk/images/travelLocations/sub/2310170600486700304.jpg"
+                    heading="Sea Turtle Hatchery Mahamodara."
+                    title="Dedicated to the conservation of sea turtles, this hatchery rescues turtles endangered by fishing activities and provides a safe haven for their survival."
                 />
             </div>
         </div>
