@@ -33,7 +33,7 @@ function Plan() {
         const totalCost =
             (selectedHotel?.price || 0) +
             (selectedLocation?.price || 0) +
-            (numTourists * 50); // Example tourist cost multiplier
+            (numTourists * 50);
         alert(
             `Reservation Summary:\nHotel: ${selectedHotel?.name}\nLocation: ${selectedLocation?.name}\nTime: ${selectedTime}\nNumber of Tourists: ${numTourists}\nTotal Cost: $${totalCost}`
         );
