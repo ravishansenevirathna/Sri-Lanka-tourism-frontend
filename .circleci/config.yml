@@ -1,31 +1,43 @@
-# Use the latest 2.1 version of CircleCI pipeline process engine.
-# See: https://circleci.com/docs/reference/configuration-reference
 version: 2.1
 
-# Define a job to be invoked later in a workflow.
-# See: https://circleci.com/docs/guides/orchestrate/jobs-steps/#jobs-overview & https://circleci.com/docs/reference/configuration-reference/#jobs
-jobs:
-  say-hello:
-    # Specify the execution environment. You can specify an image from Docker Hub or use one of our convenience images from CircleCI's Developer Hub.
-    # See: https://circleci.com/docs/guides/execution-managed/executor-intro/ & https://circleci.com/docs/reference/configuration-reference/#executor-job
-    docker:
-      # Specify the version you desire here
-      # See: https://circleci.com/developer/images/image/cimg/base
-      - image: cimg/base:current
+orbs:
+  docker: circleci/docker@2.5.0
 
-    # Add steps to the job
-    # See: https://circleci.com/docs/guides/orchestrate/jobs-steps/#steps-overview & https://circleci.com/docs/reference/configuration-reference/#steps
-    steps:
-      # Checkout the code as the first step.
-      - checkout
-      - run:
-          name: "Say hello"
-          command: "echo Hello, World!"
-
-# Orchestrate jobs using workflows
-# See: https://circleci.com/docs/guides/orchestrate/workflows/ & https://circleci.com/docs/reference/configuration-reference/#workflows
 workflows:
-  say-hello-workflow: # This is the name of the workflow, feel free to change it to better match your workflow.
-    # Inside the workflow, you define the jobs you want to run.
+  version: 2
+  build-workflow:
     jobs:
-      - say-hello
+      # Job 1: Build and push Docker image
+      - docker/publish:
+          # Use environment variables for image name
+          image: ${DOCKER_LOGIN}/${DOCKER_REPO}
+          
+          # Multiple tags: latest, commit SHA, and branch name
+          tag: 'latest,${CIRCLE_SHA1},${CIRCLE_BRANCH}'
+          
+          # Docker registry (defaults to Docker Hub)
+          # For other registries, specify here:
+          # registry: ghcr.io  # For GitHub Container Registry
+          # registry: public.ecr.aws  # For AWS ECR Public
+          
+          # Dockerfile configuration
+          dockerfile: Dockerfile
+          path: .
+          
+          # Docker layer caching
+          docker-layer-caching: true
+          
+          # Build arguments for metadata
+          extra_build_args: |
+            --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+            --build-arg VCS_REF=${CIRCLE_SHA1}
+            --build-arg VERSION=${CIRCLE_TAG:-${CIRCLE_SHA1}}
+          
+          # Only build on specific branches
+          filters:
+            branches:
+              only:
+                - main
+                - develop
+                - /feature\/.*/
+                - circleci-project-setup
