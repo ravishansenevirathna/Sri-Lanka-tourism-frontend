@@ -7,10 +7,10 @@ workflows:
   build-and-push:
     jobs:
       - docker/publish:
-          # Hardcoded - matches your Docker Hub exactly
-          image: ravishandoc/sri-lanka-tourism-frontend
+          # Use environment variable for image name
+          image: ${DOCKER_IMAGE}
           
-          # Simple tagging
+          # Tagging strategy
           tag: 'latest,${CIRCLE_SHA1}'
           
           # Dockerfile location
@@ -24,3 +24,4 @@ workflows:
                 - main
                 - develop
                 - circleci-project-setup
+```
