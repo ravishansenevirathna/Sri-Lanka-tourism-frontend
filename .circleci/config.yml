@@ -12,10 +12,8 @@ workflows:
           tag: 'latest,${CIRCLE_SHA1},${CIRCLE_BRANCH}'
           dockerfile: Dockerfile
           path: .
-          extra_build_args: |
-            --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-            --build-arg VCS_REF=${CIRCLE_SHA1}
-            --build-arg VERSION=${CIRCLE_TAG:-${CIRCLE_SHA1}}
+          # Fix: Use single-line format for extra_build_args
+          extra_build_args: '--build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") --build-arg VCS_REF=${CIRCLE_SHA1} --build-arg VERSION=${CIRCLE_TAG:-${CIRCLE_SHA1}}'
           filters:
             branches:
               only:
