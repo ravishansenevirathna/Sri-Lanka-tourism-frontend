@@ -7,33 +7,15 @@ workflows:
   version: 2
   build-workflow:
     jobs:
-      # Job 1: Build and push Docker image
       - docker/publish:
-          # Use environment variables for image name
           image: ${DOCKER_LOGIN}/${DOCKER_REPO}
-          
-          # Multiple tags: latest, commit SHA, and branch name
           tag: 'latest,${CIRCLE_SHA1},${CIRCLE_BRANCH}'
-          
-          # Docker registry (defaults to Docker Hub)
-          # For other registries, specify here:
-          # registry: ghcr.io  # For GitHub Container Registry
-          # registry: public.ecr.aws  # For AWS ECR Public
-          
-          # Dockerfile configuration
           dockerfile: Dockerfile
           path: .
-          
-          # Docker layer caching
-          docker-layer-caching: true
-          
-          # Build arguments for metadata
           extra_build_args: |
             --build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
             --build-arg VCS_REF=${CIRCLE_SHA1}
             --build-arg VERSION=${CIRCLE_TAG:-${CIRCLE_SHA1}}
-          
-          # Only build on specific branches
           filters:
             branches:
               only:
