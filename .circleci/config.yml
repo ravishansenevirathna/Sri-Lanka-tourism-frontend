@@ -4,20 +4,23 @@ orbs:
   docker: circleci/docker@2.5.0
 
 workflows:
-  version: 2
-  build-workflow:
+  build-and-push:
     jobs:
       - docker/publish:
-          image: ${DOCKER_LOGIN}/${DOCKER_REPO}
-          tag: 'latest,${CIRCLE_SHA1},${CIRCLE_BRANCH}'
+          # Hardcoded - matches your Docker Hub exactly
+          image: ravishandoc/sri-lanka-tourism-frontend
+          
+          # Simple tagging
+          tag: 'latest,${CIRCLE_SHA1}'
+          
+          # Dockerfile location
           dockerfile: Dockerfile
           path: .
-          # Fix: Use single-line format for extra_build_args
-          extra_build_args: '--build-arg BUILD_DATE=$(date -u +"%Y-%m-%dT%H:%M:%SZ") --build-arg VCS_REF=${CIRCLE_SHA1} --build-arg VERSION=${CIRCLE_TAG:-${CIRCLE_SHA1}}'
+          
+          # Branch filter
           filters:
             branches:
               only:
                 - main
                 - develop
-                - /feature\/.*/
                 - circleci-project-setup
