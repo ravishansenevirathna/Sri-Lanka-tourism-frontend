@@ -7,21 +7,13 @@ workflows:
   build-and-push:
     jobs:
       - docker/publish:
-          # Use environment variable for image name
           image: ${DOCKER_IMAGE}
-          
-          # Tagging strategy
           tag: 'latest,${CIRCLE_SHA1}'
-          
-          # Dockerfile location
           dockerfile: Dockerfile
           path: .
-          
-          # Branch filter
           filters:
             branches:
               only:
                 - main
                 - develop
                 - circleci-project-setup
-```
