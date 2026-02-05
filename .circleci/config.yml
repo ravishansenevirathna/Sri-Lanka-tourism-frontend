@@ -24,16 +24,32 @@ jobs:
 
             echo "Runner API Response: $RUNNER_STATUS"
 
-            # Check if any runner is online
-            ONLINE_COUNT=$(echo "$RUNNER_STATUS" | jq '[.items[] | select(.status == "running")] | length // 0')
+            # Check if any runners are registered
+            RUNNER_COUNT=$(echo "$RUNNER_STATUS" | jq '.items | length')
+            echo "Registered runners: $RUNNER_COUNT"
 
-            echo "Online runners: $ONLINE_COUNT"
+            if [ "$RUNNER_COUNT" -gt 0 ]; then
+              # Get last_connected timestamp and check if it's within last 5 minutes
+              LAST_CONNECTED=$(echo "$RUNNER_STATUS" | jq -r '.items[0].last_connected')
+              echo "Last connected: $LAST_CONNECTED"
 
-            if [ "$ONLINE_COUNT" -gt 0 ]; then
-              echo "Self-hosted runner is available"
-              echo "export USE_SELF_HOSTED=true" >> $BASH_ENV
+              # Convert timestamps to seconds for comparison
+              LAST_CONNECTED_EPOCH=$(date -d "$LAST_CONNECTED" +%s 2>/dev/null || echo 0)
+              CURRENT_EPOCH=$(date +%s)
+              DIFF_SECONDS=$((CURRENT_EPOCH - LAST_CONNECTED_EPOCH))
+
+              echo "Seconds since last connection: $DIFF_SECONDS"
+
+              # Consider runner online if connected within last 5 minutes (300 seconds)
+              if [ "$DIFF_SECONDS" -lt 300 ]; then
+                echo "Self-hosted runner is available (connected ${DIFF_SECONDS}s ago)"
+                echo "export USE_SELF_HOSTED=true" >> $BASH_ENV
+              else
+                echo "Runner last connected ${DIFF_SECONDS}s ago (>5 min), falling back to cloud"
+                echo "export USE_SELF_HOSTED=false" >> $BASH_ENV
+              fi
             else
-              echo "No self-hosted runner available, falling back to cloud"
+              echo "No self-hosted runner registered, falling back to cloud"
               echo "export USE_SELF_HOSTED=false" >> $BASH_ENV
             fi
       - run:
