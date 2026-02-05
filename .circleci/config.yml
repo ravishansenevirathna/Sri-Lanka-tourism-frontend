@@ -46,6 +46,11 @@ jobs:
               --ignore-unfixed \
               docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
       - run:
+          name: Cleanup Previous Containers
+          command: |
+            docker stop zap-target 2>/dev/null || true
+            docker rm zap-target 2>/dev/null || true
+      - run:
           name: Start Application for ZAP Scan
           command: |
             docker run -d --name zap-target -p 8080:80 \
@@ -65,7 +70,9 @@ jobs:
               -I
       - run:
           name: Stop ZAP Target Container
-          command: docker stop zap-target && docker rm zap-target
+          command: |
+            docker stop zap-target 2>/dev/null || true
+            docker rm zap-target 2>/dev/null || true
           when: always
       - store_artifacts:
           path: zap-reports
