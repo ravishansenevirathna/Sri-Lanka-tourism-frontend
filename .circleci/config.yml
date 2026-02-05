@@ -1,92 +1,253 @@
-# version: 2.1
-
-# orbs:
-#   docker: circleci/docker@2.5.0
-
-# workflows:
-#   build-and-push:
-#     jobs:
-#       - docker/publish:
-#           image: ${DOCKER_IMAGE}
-#           tag: 'latest,${CIRCLE_SHA1}'
-#           dockerfile: Dockerfile
-#           path: .
-#           filters:
-#             branches:
-#               only:
-#                 - main
-#                 - circleci-project-setup
-
-# for self hosted
 version: 2.1
 
+# Enable dynamic configuration
+setup: true
+
+orbs:
+  continuation: circleci/continuation@1.0.0
+
 jobs:
-  build-and-push:
-    machine: true
-    resource_class: ravi-ci/my-runner 
+  check-runner-health:
+    docker:
+      - image: cimg/base:current
+    resource_class: small
     steps:
       - checkout
       - run:
-          name: Docker Login
+          name: Check Self-Hosted Runner Health
           command: |
-            echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+            # Check runner status via CircleCI API
+            RUNNER_STATUS=$(curl -s -X GET \
+              "https://runner.circleci.com/api/v3/runner?resource-class=ravi-ci/my-runner" \
+              -H "Circle-Token: ${CIRCLECI_API_TOKEN}" \
+              -H "Content-Type: application/json")
+
+            echo "Runner API Response: $RUNNER_STATUS"
+
+            # Check if any runner is online
+            ONLINE_COUNT=$(echo "$RUNNER_STATUS" | jq '[.items[] | select(.status == "running")] | length // 0')
+
+            echo "Online runners: $ONLINE_COUNT"
+
+            if [ "$ONLINE_COUNT" -gt 0 ]; then
+              echo "Self-hosted runner is available"
+              echo "export USE_SELF_HOSTED=true" >> $BASH_ENV
+            else
+              echo "No self-hosted runner available, falling back to cloud"
+              echo "export USE_SELF_HOSTED=false" >> $BASH_ENV
+            fi
       - run:
-          name: Build Docker Image
+          name: Generate Pipeline Config
           command: |
-            docker build -t docker.io/ravishandoc/sri-lanka-tourism-frontend:latest .
-      - run:
-          name: Scan Image with Trivy
-          command: |
-            docker run --rm \
-              -v /var/run/docker.sock:/var/run/docker.sock \
-              -v $HOME/.cache:/root/.cache/ \
-              aquasec/trivy:latest image \
-              --exit-code 1 \
-              --severity HIGH,CRITICAL \
-              --ignore-unfixed \
-              docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
-      - run:
-          name: Cleanup Previous Containers
-          command: |
-            docker stop zap-target 2>/dev/null || true
-            docker rm zap-target 2>/dev/null || true
-      - run:
-          name: Start Application for ZAP Scan
-          command: |
-            docker run -d --name zap-target -p 8080:80 \
-              docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
-            # Wait for app to be ready
-            sleep 10
-      - run:
-          name: OWASP ZAP Baseline Scan
-          command: |
-            mkdir -p $(pwd)/zap-reports
-            chmod 777 $(pwd)/zap-reports
-            docker run --rm --network host \
-              -v $(pwd)/zap-reports:/zap/wrk:rw \
-              -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
-              -t http://localhost:8080 \
-              -r zap-report.html \
-              -I
-      - run:
-          name: Stop ZAP Target Container
-          command: |
-            docker stop zap-target 2>/dev/null || true
-            docker rm zap-target 2>/dev/null || true
-          when: always
-      - store_artifacts:
-          path: zap-reports
-          destination: zap-reports
-      - run:
-          name: Push Docker Image
-          command: |
-            docker push docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
-      - run:
-          name: Docker Logout
-          command: docker logout
+            source $BASH_ENV
+
+            if [ "$USE_SELF_HOSTED" = "true" ]; then
+              echo "Generating config for self-hosted runner..."
+              cat > /tmp/generated-config.yml \<<'EOF'
+            version: 2.1
+
+            commands:
+              docker-login:
+                steps:
+                  - run:
+                      name: Docker Login
+                      command: |
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+              build-image:
+                steps:
+                  - run:
+                      name: Build Docker Image
+                      command: |
+                        docker build -t docker.io/ravishandoc/sri-lanka-tourism-frontend:latest .
+
+              trivy-scan:
+                steps:
+                  - run:
+                      name: Scan Image with Trivy
+                      command: |
+                        docker run --rm \
+                          -v /var/run/docker.sock:/var/run/docker.sock \
+                          -v $HOME/.cache:/root/.cache/ \
+                          aquasec/trivy:latest image \
+                          --exit-code 1 \
+                          --severity HIGH,CRITICAL \
+                          --ignore-unfixed \
+                          docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
+
+              zap-scan:
+                steps:
+                  - run:
+                      name: Cleanup Previous Containers
+                      command: |
+                        docker stop zap-target 2>/dev/null || true
+                        docker rm zap-target 2>/dev/null || true
+                  - run:
+                      name: Start Application for ZAP Scan
+                      command: |
+                        docker run -d --name zap-target -p 8080:80 \
+                          docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
+                        sleep 10
+                  - run:
+                      name: OWASP ZAP Baseline Scan
+                      command: |
+                        mkdir -p $(pwd)/zap-reports
+                        chmod 777 $(pwd)/zap-reports
+                        docker run --rm --network host \
+                          -v $(pwd)/zap-reports:/zap/wrk:rw \
+                          -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+                          -t http://localhost:8080 \
+                          -r zap-report.html \
+                          -I
+                  - run:
+                      name: Stop ZAP Target Container
+                      command: |
+                        docker stop zap-target 2>/dev/null || true
+                        docker rm zap-target 2>/dev/null || true
+                      when: always
+                  - store_artifacts:
+                      path: zap-reports
+                      destination: zap-reports
+
+              push-image:
+                steps:
+                  - run:
+                      name: Push Docker Image
+                      command: |
+                        docker push docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
+                  - run:
+                      name: Docker Logout
+                      command: docker logout
+
+            jobs:
+              build-and-push:
+                machine: true
+                resource_class: ravi-ci/my-runner
+                steps:
+                  - checkout
+                  - docker-login
+                  - build-image
+                  - trivy-scan
+                  - zap-scan
+                  - push-image
+
+            workflows:
+              build-deploy:
+                jobs:
+                  - build-and-push:
+                      context: docker-hub-credentials
+            EOF
+            else
+              echo "Generating config for cloud runner..."
+              cat > /tmp/generated-config.yml \<<'EOF'
+            version: 2.1
+
+            commands:
+              docker-login:
+                steps:
+                  - run:
+                      name: Docker Login
+                      command: |
+                        echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
+
+              build-image:
+                steps:
+                  - run:
+                      name: Build Docker Image
+                      command: |
+                        docker build -t docker.io/ravishandoc/sri-lanka-tourism-frontend:latest .
+
+              trivy-scan:
+                steps:
+                  - run:
+                      name: Scan Image with Trivy
+                      command: |
+                        docker run --rm \
+                          -v /var/run/docker.sock:/var/run/docker.sock \
+                          -v $HOME/.cache:/root/.cache/ \
+                          aquasec/trivy:latest image \
+                          --exit-code 1 \
+                          --severity HIGH,CRITICAL \
+                          --ignore-unfixed \
+                          docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
+
+              zap-scan:
+                steps:
+                  - run:
+                      name: Cleanup Previous Containers
+                      command: |
+                        docker stop zap-target 2>/dev/null || true
+                        docker rm zap-target 2>/dev/null || true
+                  - run:
+                      name: Start Application for ZAP Scan
+                      command: |
+                        docker run -d --name zap-target -p 8080:80 \
+                          docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
+                        sleep 10
+                  - run:
+                      name: OWASP ZAP Baseline Scan
+                      command: |
+                        mkdir -p $(pwd)/zap-reports
+                        chmod 777 $(pwd)/zap-reports
+                        docker run --rm --network host \
+                          -v $(pwd)/zap-reports:/zap/wrk:rw \
+                          -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+                          -t http://localhost:8080 \
+                          -r zap-report.html \
+                          -I
+                  - run:
+                      name: Stop ZAP Target Container
+                      command: |
+                        docker stop zap-target 2>/dev/null || true
+                        docker rm zap-target 2>/dev/null || true
+                      when: always
+                  - store_artifacts:
+                      path: zap-reports
+                      destination: zap-reports
+
+              push-image:
+                steps:
+                  - run:
+                      name: Push Docker Image
+                      command: |
+                        docker push docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
+                  - run:
+                      name: Docker Logout
+                      command: docker logout
+
+            jobs:
+              build-and-push:
+                machine:
+                  image: ubuntu-2204:current
+                resource_class: medium
+                steps:
+                  - checkout
+                  - docker-login
+                  - build-image
+                  - trivy-scan
+                  - zap-scan
+                  - push-image
+
+            workflows:
+              build-deploy:
+                jobs:
+                  - build-and-push:
+                      context: docker-hub-credentials
+            EOF
+            fi
+
+            echo "Generated config:"
+            cat /tmp/generated-config.yml
+      - continuation/continue:
+          configuration_path: /tmp/generated-config.yml
 
 workflows:
-  build-deploy:
+  setup-workflow:
     jobs:
-      - build-and-push:
-          context: docker-hub-credentials  # Reference your context
+      - check-runner-health:
+          context: docker-hub-credentials
+          filters:
+            branches:
+              only:
+                - main
+                - circleci-project-setup
