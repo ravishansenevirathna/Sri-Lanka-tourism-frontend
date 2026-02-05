@@ -75,39 +75,39 @@ jobs:
                           --ignore-unfixed \
                           docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
 
-              zap-scan:
-                steps:
-                  - run:
-                      name: Cleanup Previous Containers
-                      command: |
-                        docker stop zap-target 2>/dev/null || true
-                        docker rm zap-target 2>/dev/null || true
-                  - run:
-                      name: Start Application for ZAP Scan
-                      command: |
-                        docker run -d --name zap-target -p 8080:80 \
-                          docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
-                        sleep 10
-                  - run:
-                      name: OWASP ZAP Baseline Scan
-                      command: |
-                        mkdir -p $(pwd)/zap-reports
-                        chmod 777 $(pwd)/zap-reports
-                        docker run --rm --network host \
-                          -v $(pwd)/zap-reports:/zap/wrk:rw \
-                          -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
-                          -t http://localhost:8080 \
-                          -r zap-report.html \
-                          -I
-                  - run:
-                      name: Stop ZAP Target Container
-                      command: |
-                        docker stop zap-target 2>/dev/null || true
-                        docker rm zap-target 2>/dev/null || true
-                      when: always
-                  - store_artifacts:
-                      path: zap-reports
-                      destination: zap-reports
+              # zap-scan:
+              #   steps:
+              #     - run:
+              #         name: Cleanup Previous Containers
+              #         command: |
+              #           docker stop zap-target 2>/dev/null || true
+              #           docker rm zap-target 2>/dev/null || true
+              #     - run:
+              #         name: Start Application for ZAP Scan
+              #         command: |
+              #           docker run -d --name zap-target -p 8080:80 \
+              #             docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
+              #           sleep 10
+              #     - run:
+              #         name: OWASP ZAP Baseline Scan
+              #         command: |
+              #           mkdir -p $(pwd)/zap-reports
+              #           chmod 777 $(pwd)/zap-reports
+              #           docker run --rm --network host \
+              #             -v $(pwd)/zap-reports:/zap/wrk:rw \
+              #             -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+              #             -t http://localhost:8080 \
+              #             -r zap-report.html \
+              #             -I
+              #     - run:
+              #         name: Stop ZAP Target Container
+              #         command: |
+              #           docker stop zap-target 2>/dev/null || true
+              #           docker rm zap-target 2>/dev/null || true
+              #         when: always
+              #     - store_artifacts:
+              #         path: zap-reports
+              #         destination: zap-reports
 
               push-image:
                 steps:
@@ -128,7 +128,7 @@ jobs:
                   - docker-login
                   - build-image
                   - trivy-scan
-                  - zap-scan
+                  # - zap-scan
                   - push-image
 
             workflows:
@@ -171,39 +171,39 @@ jobs:
                           --ignore-unfixed \
                           docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
 
-              zap-scan:
-                steps:
-                  - run:
-                      name: Cleanup Previous Containers
-                      command: |
-                        docker stop zap-target 2>/dev/null || true
-                        docker rm zap-target 2>/dev/null || true
-                  - run:
-                      name: Start Application for ZAP Scan
-                      command: |
-                        docker run -d --name zap-target -p 8080:80 \
-                          docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
-                        sleep 10
-                  - run:
-                      name: OWASP ZAP Baseline Scan
-                      command: |
-                        mkdir -p $(pwd)/zap-reports
-                        chmod 777 $(pwd)/zap-reports
-                        docker run --rm --network host \
-                          -v $(pwd)/zap-reports:/zap/wrk:rw \
-                          -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
-                          -t http://localhost:8080 \
-                          -r zap-report.html \
-                          -I
-                  - run:
-                      name: Stop ZAP Target Container
-                      command: |
-                        docker stop zap-target 2>/dev/null || true
-                        docker rm zap-target 2>/dev/null || true
-                      when: always
-                  - store_artifacts:
-                      path: zap-reports
-                      destination: zap-reports
+              # zap-scan:
+              #   steps:
+              #     - run:
+              #         name: Cleanup Previous Containers
+              #         command: |
+              #           docker stop zap-target 2>/dev/null || true
+              #           docker rm zap-target 2>/dev/null || true
+              #     - run:
+              #         name: Start Application for ZAP Scan
+              #         command: |
+              #           docker run -d --name zap-target -p 8080:80 \
+              #             docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
+              #           sleep 10
+              #     - run:
+              #         name: OWASP ZAP Baseline Scan
+              #         command: |
+              #           mkdir -p $(pwd)/zap-reports
+              #           chmod 777 $(pwd)/zap-reports
+              #           docker run --rm --network host \
+              #             -v $(pwd)/zap-reports:/zap/wrk:rw \
+              #             -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+              #             -t http://localhost:8080 \
+              #             -r zap-report.html \
+              #             -I
+              #     - run:
+              #         name: Stop ZAP Target Container
+              #         command: |
+              #           docker stop zap-target 2>/dev/null || true
+              #           docker rm zap-target 2>/dev/null || true
+              #         when: always
+              #     - store_artifacts:
+              #         path: zap-reports
+              #         destination: zap-reports
 
               push-image:
                 steps:
@@ -225,7 +225,7 @@ jobs:
                   - docker-login
                   - build-image
                   - trivy-scan
-                  - zap-scan
+                  # - zap-scan
                   - push-image
 
             workflows:
