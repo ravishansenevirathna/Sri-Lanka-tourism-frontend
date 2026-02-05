@@ -1,19 +1,47 @@
-version: 2.1
+# version: 2.1
 
-orbs:
-  docker: circleci/docker@2.5.0
+# orbs:
+#   docker: circleci/docker@2.5.0
 
-workflows:
-  build-and-push:
-    jobs:
-      - docker/publish:
-          image: ${DOCKER_IMAGE}
-          tag: 'latest,${CIRCLE_SHA1}'
-          dockerfile: Dockerfile
-          path: .
-          filters:
-            branches:
-              only:
-                - main
-                - develop
-                - circleci-project-setup
+# workflows:
+#   build-and-push:
+#     jobs:
+#       - docker/publish:
+#           image: ${DOCKER_IMAGE}
+#           tag: 'latest,${CIRCLE_SHA1}'
+#           dockerfile: Dockerfile
+#           path: .
+#           filters:
+#             branches:
+#               only:
+#                 - main
+#                 - circleci-project-setup
+
+# for self hosted
+version: 2.1                                                                                                                                                                          
+                                                                                                                                                                                   
+orbs:                                                                                                                                                                                 
+    docker: circleci/docker@2.5.0                                                                                                                                                       
+                                                                                                                                                                                        
+jobs:                                                                                                                                                                                 
+  build-and-push:                                                                                                                                                                     
+    machine: true                                                                                                                                                                     
+    resource_class: ravi-ci/my-runner                                                                                                                
+    steps:                                                                                                                                                                            
+      - checkout                                                                                                                                                                      
+      - docker/build:                                                                                                                                                                 
+          image: ${DOCKER_IMAGE}                                                                                                                                                      
+          tag: 'latest,${CIRCLE_SHA1}'                                                                                                                                                
+      - docker/push:                                                                                                                                                                  
+          image: ${DOCKER_IMAGE}                                                                                                                                                      
+          tag: 'latest,${CIRCLE_SHA1}'                                                                                                                                                
+                                                                                                                                                                                        
+workflows:                                                                                                                                                                            
+  build-and-push:                                                                                                                                                                     
+    jobs:                                                                                                                                                                             
+      - build-and-push:                                                                                                                                                               
+          filters:                                                                                                                                                                    
+            branches:                                                                                                                                                                 
+              only:                                                                                                                                                                   
+                - main                                                                                                                                                                
+                - circleci-project-setup       
