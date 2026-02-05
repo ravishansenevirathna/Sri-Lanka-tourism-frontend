@@ -31,9 +31,46 @@ jobs:
           command: |
             echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_USERNAME" --password-stdin
       - run:
-          name: Build and Push
+          name: Build Docker Image
           command: |
             docker build -t docker.io/ravishandoc/sri-lanka-tourism-frontend:latest .
+      - run:
+          name: Scan Image with Trivy
+          command: |
+            docker run --rm \
+              -v /var/run/docker.sock:/var/run/docker.sock \
+              -v $HOME/.cache:/root/.cache/ \
+              aquasec/trivy:latest image \
+              --exit-code 1 \
+              --severity HIGH,CRITICAL \
+              --ignore-unfixed \
+              docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
+      - run:
+          name: Start Application for ZAP Scan
+          command: |
+            docker run -d --name zap-target -p 8080:80 \
+              docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
+            # Wait for app to be ready
+            sleep 10
+      - run:
+          name: OWASP ZAP Baseline Scan
+          command: |
+            docker run --rm --network host \
+              -v $(pwd)/zap-reports:/zap/wrk:rw \
+              -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
+              -t http://localhost:8080 \
+              -r zap-report.html \
+              -I
+      - run:
+          name: Stop ZAP Target Container
+          command: docker stop zap-target && docker rm zap-target
+          when: always
+      - store_artifacts:
+          path: zap-reports
+          destination: zap-reports
+      - run:
+          name: Push Docker Image
+          command: |
             docker push docker.io/ravishandoc/sri-lanka-tourism-frontend:latest
       - run:
           name: Docker Logout
