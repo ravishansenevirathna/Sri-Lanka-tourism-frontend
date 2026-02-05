@@ -55,6 +55,8 @@ jobs:
       - run:
           name: OWASP ZAP Baseline Scan
           command: |
+            mkdir -p $(pwd)/zap-reports
+            chmod 777 $(pwd)/zap-reports
             docker run --rm --network host \
               -v $(pwd)/zap-reports:/zap/wrk:rw \
               -t ghcr.io/zaproxy/zaproxy:stable zap-baseline.py \
